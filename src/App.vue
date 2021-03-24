@@ -1,26 +1,55 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="wrapper">
+    <WelcomeText />
+    <SearchForm
+      v-model:inputIngredient="inputIngredient"
+      v-model:inputCalories="inputCalories"
+      @handleClick="getRecipes"
+    />
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue';
+import { ref } from 'vue';
+import SearchForm from './components/SearchForm.vue';
+import WelcomeText from './components/WelcomeText.vue';
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld,
+  components: { WelcomeText, SearchForm },
+
+  setup() {
+    const inputIngredient = ref('');
+    const inputCalories = ref('');
+
+    const getRecipes = () => {
+      console.log(inputCalories.value, inputIngredient.value);
+    };
+
+    return {
+      inputIngredient,
+      inputCalories,
+      getRecipes,
+    };
   },
 };
 </script>
 
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto Mono', monospace;
+  .wrapper {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 }
 </style>

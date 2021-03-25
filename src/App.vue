@@ -6,6 +6,7 @@
       v-model:inputCalories="inputCalories"
       @handleClick="getRecipes"
     />
+    <p v-for="x in results" :key="x">{{x}}</p>
   </div>
 </template>
 
@@ -14,6 +15,10 @@ import { ref } from 'vue';
 import SearchForm from './components/SearchForm.vue';
 import WelcomeText from './components/WelcomeText.vue';
 
+const BASE_URL = 'https://api.edamam.com/search?';
+const APP_ID = process.env.VUE_APP_API_ID;
+const APP_KEY = process.env.VUE_APP_API_KEY;
+
 export default {
   name: 'App',
   components: { WelcomeText, SearchForm },
@@ -21,15 +26,23 @@ export default {
   setup() {
     const inputIngredient = ref('');
     const inputCalories = ref('');
+    const results = ref();
 
-    const getRecipes = () => {
-      console.log(inputCalories.value, inputIngredient.value);
+    const getRecipes = async () => {
+      const response = await fetch(
+        `${BASE_URL}q=${inputIngredient.value}&app_id=${APP_ID}&app_key=${APP_KEY}&calories=0-${inputCalories.value}&from=0&to=3`,
+      );
+
+      const data = await response.json();
+      results.value = data.hits.map((item) => item.recipe);
+      console.log(results.value);
     };
 
     return {
       inputIngredient,
       inputCalories,
       getRecipes,
+      results,
     };
   },
 };

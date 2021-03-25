@@ -6,7 +6,7 @@
       v-model:inputCalories="inputCalories"
       @handleClick="getRecipes"
     />
-    <p v-for="x in results" :key="x">{{x}}</p>
+    <p v-for="recipe in results" :key="recipe">{{recipe}}</p>
   </div>
 </template>
 

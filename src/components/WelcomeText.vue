@@ -16,7 +16,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .welcomeBox {
   margin-top: 50px;
   font-weight: bold;

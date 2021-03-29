@@ -1,10 +1,6 @@
 <template>
   <transition name="fade">
-    <div
-      class="arrow"
-      v-if="state.nextView && !state.error && !state.loading"
-      @click="state.nextView = !state.nextView"
-    >
+    <div class="arrow" v-if="state.isVisible" @click="state.nextView = !state.nextView">
       🡻
     </div>
   </transition>
@@ -16,17 +12,22 @@
       v-model:inputCalories="inputCalories"
       @handleClick="getRecipes"
     />
-    <DishResults v-if="state.nextView && !state.error && !state.loading" :results="results" />
-    <h2 v-if="state.loading">Loading...</h2>
-    <h2 v-if="state.error && !state.loading">We have an error :(</h2>
+    <transition-group name="fade">
+      <div class="results" v-if="state.isVisible">
+        <DishResults v-for="item in results" :key="item" :results="item" />
+      </div>
+    </transition-group>
+    <AppLoader v-if="state.loading" />
+    <h2 class="error" v-if="state.error && !state.loading">We have an error 😔</h2>
   </div>
 </template>
 
 <script>
-import { reactive, ref } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import SearchForm from './components/SearchForm.vue';
 import WelcomeText from './components/WelcomeText.vue';
 import DishResults from './components/DishResults.vue';
+import AppLoader from './components/AppLoader.vue';
 
 const BASE_URL = 'https://api.edamam.com/search?';
 const APP_ID = process.env.VUE_APP_API_ID;
@@ -34,7 +35,12 @@ const APP_KEY = process.env.VUE_APP_API_KEY;
 
 export default {
   name: 'App',
-  components: { WelcomeText, SearchForm, DishResults },
+  components: {
+    WelcomeText,
+    SearchForm,
+    DishResults,
+    AppLoader,
+  },
 
   setup() {
     const inputIngredient = ref('');
@@ -46,16 +52,20 @@ export default {
       nextView: false,
       loading: false,
       error: false,
+      // all statements for show/hide component
+      isVisible: computed(() => state.nextView && !state.error && !state.loading),
     });
 
     const getRecipes = async () => {
-      state.loading = true;
       if (inputIngredient.value && inputCalories.value) {
         state.nextView = true;
+        state.loading = true;
+      } else {
+        state.loading = false;
       }
       try {
         const response = await fetch(
-          `${BASE_URL}q=${inputIngredient.value}&app_id=${APP_ID}&app_key=${APP_KEY}&calories=0-${inputCalories.value}&from=0&to=3`,
+          `${BASE_URL}q=${inputIngredient.value}&app_id=${APP_ID}&app_key=${APP_KEY}&calories=0-${inputCalories.value}&from=0&to=50`,
         );
 
         const data = await response.json();
@@ -122,6 +132,28 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    .results {
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: 1fr 1fr 1fr;
+      gap: 50px 0px;
+
+      @media (min-width: 601px) {
+        grid-template-columns: 1fr 1fr;
+        gap: 50px 20px;
+      }
+
+      @media (min-width: 901px) {
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 50px 20px;
+      }
+    }
+
+    .error {
+      color: red;
+      margin-top: 30px;
+    }
   }
 
   .bcgNone {

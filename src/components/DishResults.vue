@@ -1,5 +1,5 @@
 <template>
-  <img :src="results.image" />
+  <img :src="results.image" @click="$emit('handleItemClick')" />
 </template>
 
 <script>
@@ -12,6 +12,8 @@ export default {
       required: true,
     },
   },
+
+  emits: ['handleItemClick'],
 };
 </script>
 
@@ -19,5 +21,11 @@ export default {
 img {
   width: 300px;
   height: 300px;
+  transition: transform 0.3s ease-in-out;
+}
+
+img:hover {
+  cursor: pointer;
+  transform: scale(0.8);
 }
 </style>

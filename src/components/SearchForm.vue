@@ -50,6 +50,10 @@ export default {
   border-bottom: $border;
   font-size: 18px;
   font-weight: $weight;
+
+  @media (min-width: 1060px) {
+    width: 70%;
+  }
 }
 
 .dishForm {
@@ -61,12 +65,20 @@ export default {
   justify-content: space-between;
   align-items: center;
 
+  @media (min-width: 1060px) {
+    width: 50%;
+  }
+
   .formInput {
     @include formElement(100%, 3px solid black, white, black, normal);
   }
 
   .searchBtn {
     @include formElement(80%, none, black, white, bold);
+
+    @media (min-width: 1060px) {
+      width: 50%;
+    }
   }
 }
 </style>

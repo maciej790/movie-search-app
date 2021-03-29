@@ -1,6 +1,6 @@
 <template>
   <transition name="fade">
-    <div class="arrow" v-if="state.isVisible" @click="state.nextView = !state.nextView">
+    <div class="arrow" v-if="state.isVisible" @click="handleDefaultView">
       🡻
     </div>
   </transition>
@@ -14,10 +14,20 @@
     />
     <transition-group name="fade">
       <div class="results" v-if="state.isVisible">
-        <DishResults v-for="item in results" :key="item" :results="item" />
+        <DishResults
+          v-for="item in results"
+          :key="item"
+          :results="item"
+          @handleItemClick="handleItemClick(item)"
+        />
       </div>
     </transition-group>
     <AppLoader v-if="state.loading" />
+    <ItemModal
+      v-if="state.showModal && state.nextView"
+      :modalInfo="modalInfo"
+      @handleCloseModal="handleCloseModal"
+    />
     <h2 class="error" v-if="state.error && !state.loading">We have an error 😔</h2>
   </div>
 </template>
@@ -28,6 +38,7 @@ import SearchForm from './components/SearchForm.vue';
 import WelcomeText from './components/WelcomeText.vue';
 import DishResults from './components/DishResults.vue';
 import AppLoader from './components/AppLoader.vue';
+import ItemModal from './components/ItemModal.vue';
 
 const BASE_URL = 'https://api.edamam.com/search?';
 const APP_ID = process.env.VUE_APP_API_ID;
@@ -40,18 +51,21 @@ export default {
     SearchForm,
     DishResults,
     AppLoader,
+    ItemModal,
   },
 
   setup() {
     const inputIngredient = ref('');
     const inputCalories = ref('');
     const results = ref();
+    const modalInfo = ref({});
 
     // variables for service error and loadnig api
     const state = reactive({
       nextView: false,
       loading: false,
       error: false,
+      showModal: false,
       // all statements for show/hide component
       isVisible: computed(() => state.nextView && !state.error && !state.loading),
     });
@@ -65,7 +79,7 @@ export default {
       }
       try {
         const response = await fetch(
-          `${BASE_URL}q=${inputIngredient.value}&app_id=${APP_ID}&app_key=${APP_KEY}&calories=0-${inputCalories.value}&from=0&to=50`,
+          `${BASE_URL}q=${inputIngredient.value}&app_id=${APP_ID}&app_key=${APP_KEY}&calories=0-${inputCalories.value}&from=0&to=51`,
         );
 
         const data = await response.json();
@@ -83,12 +97,34 @@ export default {
       state.loading = false;
     };
 
+    const handleItemClick = (item) => {
+      state.showModal = true;
+      modalInfo.value = {
+        label: item.label,
+        calories: Math.round(item.calories),
+        recipe: item.url,
+      };
+    };
+
+    const handleDefaultView = () => {
+      state.nextView = false;
+      state.showModal = false;
+    };
+
+    const handleCloseModal = () => {
+      state.showModal = false;
+    };
+
     return {
       inputIngredient,
       inputCalories,
       getRecipes,
       results,
       state,
+      handleItemClick,
+      modalInfo,
+      handleDefaultView,
+      handleCloseModal,
     };
   },
 };
@@ -132,6 +168,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
 
     .results {
       display: grid;
@@ -146,7 +183,7 @@ body {
 
       @media (min-width: 901px) {
         grid-template-columns: 1fr 1fr 1fr;
-        gap: 50px 20px;
+        gap: 50px 50px;
       }
     }
 

@@ -23,6 +23,10 @@ export default {
   width: 90%;
   text-align: center;
 
+  @media (min-width: 1060px) {
+    width: 50%;
+  }
+
   .appDescription {
     line-height: 30px;
     margin-top: 30px;

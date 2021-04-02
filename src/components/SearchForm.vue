@@ -1,14 +1,40 @@
 <template>
   <form class="search_form">
-    <input class="inp_skill" type="text" placeholder="e.g. Java" />
-    <input class="inp_location" type="text" placeholder="location" />
-    <button class="serch_btn">Show jobs</button>
+    <input
+      class="inp_skill"
+      type="text"
+      placeholder="e.g. Java"
+      :value="inputSkill"
+      @change="(e) => $emit('update:inputSkill', e.target.value)"
+    />
+    <input
+      class="inp_location"
+      type="text"
+      placeholder="location"
+      :value="inputLocation"
+      @change="(e) => $emit('update:inputLocation', e.target.value)"
+    />
+    <button class="serch_btn" @click.prevent="$emit('handleSearchClick')">Show jobs</button>
   </form>
 </template>
 
 <script>
 export default {
   name: 'SearchForm',
+
+  props: {
+    inputSkill: {
+      type: String,
+      required: true,
+    },
+
+    inputLocation: {
+      type: String,
+      required: true,
+    },
+  },
+
+  emits: ['update:inputSkill', 'update:inputLocation', 'handleSearchClick'],
 };
 </script>
 

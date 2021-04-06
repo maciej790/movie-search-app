@@ -1,23 +1,28 @@
 <template>
   <div class="wrapper">
-    <WelcomeText v-if="!renderStatement.showResults" />
+    <div class="loup" v-if="status !== 'start'" @click="status = 'start'">
+      <p>🔎</p>
+    </div>
+    <WelcomeText v-if="status === 'start'" />
     <SearchForm
       v-model:inputValue="inputValue"
       @handleSearchClick="handleSearchClick"
-      v-if="!renderStatement.showResults"
+      v-if="status === 'start'"
     />
-    <h1 v-if="renderStatement.error">Error</h1>
+    <p class="error" v-if="status === 'error'">
+      We have an error or have not any results :(
+    </p>
     <transition-group name="fade">
-      <section class="item_lists" v-if="renderStatement.showResults">
+      <section class="item_lists" v-if="status === 'next'">
         <MovieItem v-for="item in searchResults" :key="item.imdbID" :movie="item" />
       </section>
     </transition-group>
-    <LoadingCircle v-if="renderStatement.loading" />
+    <LoadingCircle v-if="loading" />
   </div>
 </template>
 
 <script>
-import { computed, reactive, ref } from 'vue';
+import { reactive, ref, toRefs } from 'vue';
 import SearchForm from '../components/SearchForm.vue';
 import WelcomeText from '../components/WelcomeText.vue';
 import MovieItem from '../components/MovieItem.vue';
@@ -40,13 +45,7 @@ export default {
 
     const renderStatement = reactive({
       loading: false,
-      error: false,
-      nextView: false,
-      showResults: computed(
-        () => renderStatement.loading === false
-          && renderStatement.error === false
-          && renderStatement.nextView === true,
-      ),
+      status: 'start',
     });
 
     const handleSearchClick = async () => {
@@ -58,14 +57,15 @@ export default {
           );
 
           const data = await response.json();
-          console.log(data);
           searchResults.value = data.Search;
-          renderStatement.error = false;
-          renderStatement.nextView = true;
+          if (searchResults.value) {
+            renderStatement.status = 'next';
+          } else {
+            renderStatement.status = 'error';
+          }
         } catch (err) {
-          renderStatement.error = true;
-          renderStatement.nextView = false;
           console.log(err);
+          renderStatement.status = 'error';
         }
       }
 
@@ -75,7 +75,7 @@ export default {
       inputValue,
       handleSearchClick,
       searchResults,
-      renderStatement,
+      ...toRefs(renderStatement),
     };
   },
 };
@@ -86,8 +86,7 @@ export default {
 .fade-leave-active {
   transition: opacity 1s ease;
 }
-.fade-enter-from,
-.fade-leave-to {
+.fade-enter-from {
   opacity: 0;
 }
 
@@ -106,6 +105,29 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    .error {
+      text-align: center;
+      margin-top: 250px;
+      font-weight: bold;
+      font-size: 30px;
+      color: red;
+    }
+
+    .loup {
+      position: fixed;
+      top: 0;
+      margin-top: 50px;
+      background-color: rgb(21, 141, 156);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50px;
+      border: 3px solid black;
+      width: 70px;
+      height: 70px;
+      font-size: 30px;
+    }
 
     .item_lists {
       display: flex;

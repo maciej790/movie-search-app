@@ -1,7 +1,7 @@
 <template>
   <form class="search_form">
     <input
-      class="inp_skill"
+      class="input_search"
       type="text"
       placeholder="e.g. Batman"
       :value="inputValue"
@@ -47,12 +47,8 @@ export default {
   justify-content: space-between;
   align-items: center;
 
-  .inp_skill {
+  .input_search {
     @include formElement(70%, transparent, 3px solid rgb(21, 141, 156), 20px, 20px);
-  }
-
-  .inp_location {
-    @include formElement(70%, transparent, 3px solid rgb(43, 177, 103), 20px, 20px);
   }
 
   .serch_btn {

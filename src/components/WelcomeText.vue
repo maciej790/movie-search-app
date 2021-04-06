@@ -1,6 +1,6 @@
 <template>
   <header class="app_header">
-    <h1>Github Jobs</h1>
+    <h1>Your movies app</h1>
     <p class="app_description">
       Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam placeat minima accusamus
       delectus adipisci amet et eligendi explicabo id nemo sequi necessitatibus quis ducimus

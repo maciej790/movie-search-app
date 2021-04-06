@@ -3,18 +3,11 @@
     <input
       class="inp_skill"
       type="text"
-      placeholder="e.g. Java"
-      :value="inputSkill"
-      @change="(e) => $emit('update:inputSkill', e.target.value)"
+      placeholder="e.g. Batman"
+      :value="inputValue"
+      @change="(e) => $emit('update:inputValue', e.target.value)"
     />
-    <input
-      class="inp_location"
-      type="text"
-      placeholder="location"
-      :value="inputLocation"
-      @change="(e) => $emit('update:inputLocation', e.target.value)"
-    />
-    <button class="serch_btn" @click.prevent="$emit('handleSearchClick')">Show jobs</button>
+    <button class="serch_btn" @click.prevent="$emit('handleSearchClick')">Get movies</button>
   </form>
 </template>
 
@@ -23,18 +16,13 @@ export default {
   name: 'SearchForm',
 
   props: {
-    inputSkill: {
-      type: String,
-      required: true,
-    },
-
-    inputLocation: {
+    inputValue: {
       type: String,
       required: true,
     },
   },
 
-  emits: ['update:inputSkill', 'update:inputLocation', 'handleSearchClick'],
+  emits: ['update:inputValue', 'handleSearchClick'],
 };
 </script>
 
@@ -52,8 +40,8 @@ export default {
 
 .search_form {
   width: 90%;
-  margin-top: 100px;
-  height: 250px;
+  margin-top: 150px;
+  height: 150px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

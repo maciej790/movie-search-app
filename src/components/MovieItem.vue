@@ -1,7 +1,10 @@
 <template>
   <div class="item">
-    <div class="poster" :style="style"></div>
-    {{ movie.Title }}
+    <router-link :to="{ name: 'MovieDetail', params: { movie_id: movie.imdbID } }">
+      <div class="poster">
+        <img class="poster_img" :src="movie.Poster" />
+      </div>
+    </router-link>
   </div>
 </template>
 
@@ -32,15 +35,29 @@ export default {
 
 <style lang="scss">
 .item {
-  width: 90%;
-  height: 400px;
-  background-color: orange;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: auto;
   margin: 40px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
 
   .poster {
-    width: 100%;
-    height: 200px;
+    height: auto;
     background-repeat: no-repeat;
+    transition: transform 0.3s ease-in-out;
+
+    .poster_img {
+      width: 250px;
+      border: 8px solid rgb(21, 141, 156);
+    }
   }
+}
+
+.poster:hover {
+  cursor: pointer;
+  transform: scale(0.8);
 }
 </style>

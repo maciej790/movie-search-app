@@ -47,6 +47,14 @@ export default {
   justify-content: space-between;
   align-items: center;
 
+  @media (min-width: 684px) {
+    width: 50%;
+  }
+
+  @media (min-width: 1000px) {
+    width: 30%;
+  }
+
   .input_search {
     @include formElement(70%, transparent, 3px solid rgb(21, 141, 156), 20px, 20px);
   }
@@ -57,6 +65,16 @@ export default {
     font-size: 18px;
     font-weight: bold;
     border-radius: 10px;
+    transition: transform, 0.3s ease-in-out;
+
+    @media (min-width: 1000px) {
+      width: 40%;
+    }
+  }
+
+  .serch_btn:hover {
+    cursor: pointer;
+    transform: scale(1.2);
   }
 }
 </style>

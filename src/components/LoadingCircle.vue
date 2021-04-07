@@ -1,6 +1,6 @@
 <template>
   <div class="circle_box">
-    <p class="icon">🎬</p>
+    <p class="icon"><i class="fas fa-spinner fa-2x"></i></p>
   </div>
 </template>
 
@@ -24,6 +24,7 @@ export default {
     width: 150px;
     height: 150px;
     border: 3px solid black;
+    color: white;
     border-radius: 50px;
     display: flex;
     justify-content: center;

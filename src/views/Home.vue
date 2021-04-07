@@ -1,8 +1,6 @@
 <template>
+  <TopLoup v-if="status !== 'start'" @click="status = 'start'" />
   <div class="wrapper">
-    <div class="loup" v-if="status !== 'start'" @click="status = 'start'">
-      <p>🔎</p>
-    </div>
     <WelcomeText v-if="status === 'start'" />
     <SearchForm
       v-model:inputValue="inputValue"
@@ -27,6 +25,7 @@ import SearchForm from '../components/SearchForm.vue';
 import WelcomeText from '../components/WelcomeText.vue';
 import MovieItem from '../components/MovieItem.vue';
 import LoadingCircle from '../components/LoadingCircle.vue';
+import TopLoup from '../components/TopLoup.vue';
 
 const BASE_URL = 'https://www.omdbapi.com/';
 
@@ -36,6 +35,7 @@ export default {
     SearchForm,
     MovieItem,
     LoadingCircle,
+    TopLoup,
   },
   name: 'Home',
 
@@ -82,11 +82,14 @@ export default {
 </script>
 
 <style lang="scss">
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 1s ease;
+.fade-enter-active {
+  transition: opacity 3s;
 }
-.fade-enter-from {
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
 }
 
@@ -114,26 +117,25 @@ body {
       color: red;
     }
 
-    .loup {
-      position: fixed;
-      top: 0;
-      margin-top: 50px;
-      background-color: rgb(21, 141, 156);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 50px;
-      border: 3px solid black;
-      width: 70px;
-      height: 70px;
-      font-size: 30px;
-    }
-
     .item_lists {
       display: flex;
       flex-direction: column;
       align-items: center;
       width: 90%;
+
+      @media (min-width: 1000px) {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        gap: 0px 0px;
+      }
+
+      @media (min-width: 1200px) {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
+        gap: 0px 0px;
+      }
     }
   }
 }

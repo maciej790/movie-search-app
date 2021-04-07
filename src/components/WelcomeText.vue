@@ -23,6 +23,14 @@ export default {
   flex-direction: column;
   align-items: center;
 
+  @media (min-width: 684px) {
+    width: 50%;
+  }
+
+  @media (min-width: 1000px) {
+    width: 30%;
+  }
+
   .app_description {
     margin-top: 20px;
     text-align: justify;

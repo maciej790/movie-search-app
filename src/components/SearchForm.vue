@@ -31,6 +31,7 @@ export default {
   width: $width;
   height: 40px;
   background-color: $bcg;
+  color: white;
   text-align: center;
   outline: none;
   border: $border;
@@ -57,6 +58,10 @@ export default {
 
   .input_search {
     @include formElement(70%, transparent, 3px solid rgb(21, 141, 156), 20px, 20px);
+  }
+
+  ::placeholder {
+    color: rgb(255, 255, 255);
   }
 
   .serch_btn {

@@ -1,11 +1,9 @@
 <template>
-  <div class="item">
-    <router-link :to="{ name: 'MovieDetail', params: { movie_id: movie.imdbID } }">
-      <div class="poster">
-        <img class="poster_img" :src="movie.Poster" />
-      </div>
-    </router-link>
-  </div>
+  <router-link :to="{ name: 'MovieDetail', params: { movie_id: movie.imdbID } }">
+    <div class="poster">
+      <img class="poster_img" :src="movie.Poster" :alt="movie.Title" />
+    </div>
+  </router-link>
 </template>
 
 <script>
@@ -34,25 +32,16 @@ export default {
 </script>
 
 <style lang="scss">
-.item {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+.poster {
   height: auto;
-  margin: 40px;
-  text-align: center;
-  font-size: 20px;
-  font-weight: bold;
+  background-repeat: no-repeat;
+  transition: transform 0.3s ease-in-out;
 
-  .poster {
-    height: auto;
-    background-repeat: no-repeat;
-    transition: transform 0.3s ease-in-out;
-
-    .poster_img {
-      width: 250px;
-      border: 8px solid rgb(21, 141, 156);
-    }
+  .poster_img {
+    width: 250px;
+    border: 8px solid rgb(21, 141, 156);
+    border-radius: 30px;
+    color: white;
   }
 }
 

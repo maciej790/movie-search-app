@@ -69,6 +69,7 @@ export default {
         }
       }
 
+      inputValue.value = '';
       renderStatement.loading = false;
     };
     return {
@@ -101,15 +102,26 @@ export default {
 
 body {
   font-family: 'Varela Round', sans-serif;
+  background: rgb(55, 48, 179);
+  background: linear-gradient(
+    90deg,
+    rgba(55, 48, 179, 1) 0%,
+    rgba(38, 38, 179, 1) 35%,
+    rgba(25, 62, 72, 1) 100%
+  );
+  color: white;
 
   .wrapper {
     width: 100%;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
 
     .error {
+      position: absolute;
+      top: 0;
       text-align: center;
       margin-top: 250px;
       font-weight: bold;
@@ -118,23 +130,24 @@ body {
     }
 
     .item_lists {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
       width: 90%;
+      margin-top: 100px;
+      text-align: center;
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: 1fr;
+      gap: 80px;
 
       @media (min-width: 1000px) {
         display: grid;
         grid-template-columns: 1fr 1fr;
         grid-template-rows: 1fr 1fr;
-        gap: 0px 0px;
       }
 
       @media (min-width: 1200px) {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
         grid-template-rows: 1fr 1fr 1fr;
-        gap: 0px 0px;
       }
     }
   }

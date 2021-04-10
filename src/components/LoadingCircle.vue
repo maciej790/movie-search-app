@@ -25,7 +25,7 @@ export default {
     height: 150px;
     border: 3px solid black;
     color: white;
-    border-radius: 50px;
+    border-radius: 100px;
     display: flex;
     justify-content: center;
     align-items: center;

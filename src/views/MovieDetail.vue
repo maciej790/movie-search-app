@@ -1,37 +1,36 @@
 <template>
-  <LoadingCircle v-if="!detailInfo" />
+  <LoadingCircle v-if="loading" />
   <router-link to="/">
     <TopLoup />
   </router-link>
 
   <section class="movie_detail">
     <div class="detail_img">
-      <img :src="detailInfo.Poster" />
+      <img :src="searchResults.Poster" />
     </div>
 
     <div class="movie_description">
-      <h2 class="detail_title">{{ detailInfo.Title }}</h2>
+      <h2 class="detail_title">{{ searchResults.Title }}</h2>
       <p class="detail_genre">
-        {{ detailInfo.Genre }}
+        {{ searchResults.Genre }}
       </p>
 
       <p class="detial_plot">
-        {{ detailInfo.Plot }}
+        {{ searchResults.Plot }}
       </p>
 
       <p class="detail_actors">
-        {{ detailInfo.Actors }}
+        {{ searchResults.Actors }}
       </p>
     </div>
   </section>
 </template>
 
 <script>
-import { onMounted, ref } from 'vue';
+import { onMounted } from 'vue';
 import LoadingCircle from '../components/LoadingCircle.vue';
 import TopLoup from '../components/TopLoup.vue';
-
-const BASE_URL = 'https://www.omdbapi.com/';
+import useFetch from '../use/useFetch';
 
 export default {
   components: { LoadingCircle, TopLoup },
@@ -45,24 +44,21 @@ export default {
   },
 
   setup(props) {
-    const detailInfo = ref('');
+    const {
+      searchResults, status, loading, getData,
+    } = useFetch();
 
     onMounted(async () => {
-      try {
-        const response = await fetch(
-          `${BASE_URL}?apikey=${process.env.VUE_APP_API_KEY}&i=${props.movie_id}`,
-        );
-
-        const data = await response.json();
-
-        detailInfo.value = data;
-        console.log(detailInfo.value);
-      } catch (err) {
-        console.log(err);
-      }
+      const query = `${process.env.VUE_APP_BASE_URL}?apikey=${process.env.VUE_APP_API_KEY}&i=${props.movie_id}`;
+      getData(query);
     });
 
-    return { detailInfo };
+    return {
+      searchResults,
+      status,
+      loading,
+      getData,
+    };
   },
 };
 </script>
@@ -86,6 +82,20 @@ export default {
     width: 90%;
     margin-top: 50px;
     text-align: center;
+  }
+
+  .movie_save {
+    margin-top: 20px;
+    color: rgb(255, 21, 21);
+    padding: 10px;
+    border: 2px solid white;
+    border-radius: 100px;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .movie_save:hover {
+    cursor: pointer;
+    transform: scale(0.8);
   }
 
   .movie_description {

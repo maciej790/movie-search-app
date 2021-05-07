@@ -7,8 +7,6 @@
 </template>
 
 <script>
-import { computed, ref } from 'vue';
-
 export default {
   name: 'MovieItem',
 
@@ -17,16 +15,6 @@ export default {
       type: Object,
       required: true,
     },
-  },
-
-  setup(props) {
-    const posterImg = ref(props.movie.Poster);
-    const style = ref(computed(() => `background-image: url("${posterImg.value}")`));
-
-    return {
-      posterImg,
-      style,
-    };
   },
 };
 </script>

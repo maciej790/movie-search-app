@@ -12,7 +12,7 @@
     </p>
     <transition-group name="fade">
       <section class="item_lists" v-if="status === 'next'">
-        <MovieItem v-for="item in searchResults" :key="item.imdbID" :movie="item" />
+        <MovieItem v-for="item in searchResults.Search" :key="item.imdbID" :movie="item" />
       </section>
     </transition-group>
     <LoadingCircle v-if="loading" />
@@ -20,14 +20,13 @@
 </template>
 
 <script>
-import { reactive, ref, toRefs } from 'vue';
+import { ref } from 'vue';
 import SearchForm from '../components/SearchForm.vue';
 import WelcomeText from '../components/WelcomeText.vue';
 import MovieItem from '../components/MovieItem.vue';
 import LoadingCircle from '../components/LoadingCircle.vue';
 import TopLoup from '../components/TopLoup.vue';
-
-const BASE_URL = 'https://www.omdbapi.com/';
+import useFetch from '../use/useFetch';
 
 export default {
   components: {
@@ -41,42 +40,24 @@ export default {
 
   setup() {
     const inputValue = ref('');
-    const searchResults = ref([]);
-
-    const renderStatement = reactive({
-      loading: false,
-      status: 'start',
-    });
+    const {
+      searchResults, status, loading, getData,
+    } = useFetch();
 
     const handleSearchClick = async () => {
-      renderStatement.loading = true;
+      const query = `${process.env.VUE_APP_BASE_URL}?apikey=${process.env.VUE_APP_API_KEY}&s=${inputValue.value}`;
       if (inputValue.value) {
-        try {
-          const response = await fetch(
-            `${BASE_URL}?apikey=${process.env.VUE_APP_API_KEY}&s=${inputValue.value}`,
-          );
-
-          const data = await response.json();
-          searchResults.value = data.Search;
-          if (searchResults.value) {
-            renderStatement.status = 'next';
-          } else {
-            renderStatement.status = 'error';
-          }
-        } catch (err) {
-          console.log(err);
-          renderStatement.status = 'error';
-        }
+        getData(query);
       }
-
-      inputValue.value = '';
-      renderStatement.loading = false;
     };
+
     return {
       inputValue,
+      status,
+      loading,
+      getData,
       handleSearchClick,
       searchResults,
-      ...toRefs(renderStatement),
     };
   },
 };
@@ -94,61 +75,43 @@ export default {
   opacity: 0;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+.wrapper {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
-body {
-  font-family: 'Varela Round', sans-serif;
-  background: rgb(55, 48, 179);
-  background: linear-gradient(
-    90deg,
-    rgba(55, 48, 179, 1) 0%,
-    rgba(38, 38, 179, 1) 35%,
-    rgba(25, 62, 72, 1) 100%
-  );
-  color: white;
+  .error {
+    position: absolute;
+    top: 0;
+    text-align: center;
+    margin-top: 250px;
+    font-weight: bold;
+    font-size: 30px;
+    color: red;
+  }
 
-  .wrapper {
-    width: 100%;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  .item_lists {
+    width: 90%;
+    margin-top: 100px;
+    text-align: center;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    gap: 80px;
 
-    .error {
-      position: absolute;
-      top: 0;
-      text-align: center;
-      margin-top: 250px;
-      font-weight: bold;
-      font-size: 30px;
-      color: red;
+    @media (min-width: 1000px) {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
     }
 
-    .item_lists {
-      width: 90%;
-      margin-top: 100px;
-      text-align: center;
+    @media (min-width: 1200px) {
       display: grid;
-      grid-template-columns: 1fr;
-      grid-template-rows: 1fr;
-      gap: 80px;
-
-      @media (min-width: 1000px) {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 1fr 1fr;
-      }
-
-      @media (min-width: 1200px) {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        grid-template-rows: 1fr 1fr 1fr;
-      }
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: 1fr 1fr 1fr;
     }
   }
 }

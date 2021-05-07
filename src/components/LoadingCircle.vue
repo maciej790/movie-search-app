@@ -15,7 +15,7 @@ export default {
   position: absolute;
   width: 100%;
   min-height: 100vh;
-  background-color: rgba(68, 68, 68, 0.7);
+  background-color: rgb(21, 14, 59);
   display: flex;
   justify-content: center;
   align-items: center;
